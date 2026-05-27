@@ -1,0 +1,1102 @@
+% -*- coding: utf-8 -*-
+%-------------------------designed by zcf--------------
+\documentclass[UTF8,a4paper,10pt]{ctexart}
+\usepackage[left=3.17cm, right=3.17cm, top=2.74cm, bottom=2.74cm]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx,subfig}
+\usepackage{float}
+\usepackage{cite}
+\usepackage{caption}
+\usepackage{enumerate}
+\usepackage{booktabs} %表格
+\usepackage{multirow}
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}  %表格强制换行
+%-------------------------字体设置--------------
+% \usepackage{times} 
+% \usepackage{ctex} % ctexart 已经加载 ctex，避免重复加载
+\setCJKmainfont[ItalicFont=Noto Sans CJK SC Bold, BoldFont=Noto Serif CJK SC Black]{Noto Serif CJK SC}
+\newcommand{\yihao}{\fontsize{26pt}{36pt}\selectfont}           % 一号, 1.4 倍行距
+\newcommand{\erhao}{\fontsize{22pt}{28pt}\selectfont}          % 二号, 1.25倍行距
+\newcommand{\xiaoer}{\fontsize{18pt}{18pt}\selectfont}          % 小二, 单倍行距
+\newcommand{\sanhao}{\fontsize{16pt}{24pt}\selectfont}  %三号字
+\newcommand{\xiaosan}{\fontsize{15pt}{22pt}\selectfont}        % 小三, 1.5倍行距
+\newcommand{\sihao}{\fontsize{14pt}{21pt}\selectfont}            % 四号, 1.5 倍行距
+\newcommand{\banxiaosi}{\fontsize{13pt}{19.5pt}\selectfont}    % 半小四, 1.5倍行距
+\newcommand{\xiaosi}{\fontsize{12pt}{18pt}\selectfont}            % 小四, 1.5倍行距
+\newcommand{\dawuhao}{\fontsize{11pt}{11pt}\selectfont}       % 大五号, 单倍行距
+\newcommand{\wuhao}{\fontsize{10.5pt}{15.75pt}\selectfont}    % 五号, 单倍行距
+%-------------------------章节名----------------
+% \usepackage{ctexcap} % ctexart 已经加载标题设置，避免与 ctexart 冲突 
+\ctexset{
+  section = {
+    name = {,、},
+    number = \chinese{section}
+  },
+  subsection = {
+    name = {（,）},
+    number = \chinese{subsection}
+  },
+  subsubsection = {
+    name = {,.},
+    number = \arabic{subsubsection}
+  }
+}
+%-------------------------页眉页脚--------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{\kaishu \leftmark}
+% \chead{}
+\rhead{\kaishu 并行程序设计实验报告}%加粗\bfseries 
+\lfoot{}
+\cfoot{\thepage}
+\rfoot{}
+\renewcommand{\headrulewidth}{0.1pt}  
+\renewcommand{\footrulewidth}{0pt}%去掉横线
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}%标题横线
+\newcommand{\HRulegrossa}{\rule{\linewidth}{1.2mm}}
+%-----------------------伪代码------------------
+\usepackage{algorithm}  
+\usepackage{algorithmicx}  
+\usepackage{algpseudocode}  
+\floatname{algorithm}{Algorithm}  
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}  
+\renewcommand{\algorithmicensure}{\textbf{Output:}} 
+\usepackage{lipsum}  
+\makeatletter
+\newenvironment{breakablealgorithm}
+  {% \begin{breakablealgorithm}
+  \begin{center}
+     \refstepcounter{algorithm}% New algorithm
+     \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+     \renewcommand{\caption}[2][\relax]{% Make a new \caption
+      {\raggedright\textbf{\ALG@name~\thealgorithm} ##2\par}%
+      \ifx\relax##1\relax % #1 is \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+      \else % #1 is not \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+      \fi
+      \kern2pt\hrule\kern2pt
+     }
+  }{% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+  \end{center}
+  }
+\makeatother
+%------------------------代码-------------------
+\usepackage{xcolor} 
+\usepackage{listings} 
+\lstset{ 
+breaklines,%自动换行
+basicstyle=\small,
+% escapeinside=``, % 已关闭：否则代码注释中 CRT_MOD_COUNT 这类下划线会触发 Missing $ inserted
+keywordstyle=\color{ blue!70} \bfseries,
+commentstyle=\color{red!50!green!50!blue!50},% 
+stringstyle=\ttfamily,% 
+extendedchars=false,% 
+linewidth=\textwidth,% 
+numbers=left,% 
+numberstyle=\tiny \color{blue!50},% 
+frame=trbl% 
+rulesepcolor= \color{ red!20!green!20!blue!20} 
+}
+%------------超链接----------
+\usepackage[colorlinks,linkcolor=black,anchorcolor=blue]{hyperref}
+%------------------------TODO-------------------
+\usepackage{enumitem,amssymb}
+\newlist{todolist}{itemize}{2}
+\setlist[todolist]{label=$\square$}
+% for check symbol 
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\done}{\rlap{$\square$}{\raisebox{2pt}{\large\hspace{1pt}\cmark}}\hspace{-2.5pt}}
+\newcommand{\wontfix}{\rlap{$\square$}{\large\hspace{1pt}\xmark}}
+%------------------------水印-------------------
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{eso-pic}
+
+\newcommand{\watermark}[3]{\AddToShipoutPictureBG{
+\parbox[b][\paperheight]{\paperwidth}{
+\vfill%
+\centering%
+\tikz[remember picture, overlay]%
+  \node [rotate = #1, scale = #2] at (current page.center)%
+    {\textcolor{gray!80!cyan!30!magenta!30}{#3}};
+\vfill}}}
+
+
+
+%———————————————————————————————————————————正文———————————————————————————————————————————————
+%----------------------------------------------
+\begin{document}
+\begin{titlepage}
+    \begin{center}
+    \includegraphics[width=0.8\textwidth]{NKU.png}\\[1cm]    
+    \textsc{\Huge \kaishu{\textbf{南\ \ \ \ \ \ 开\ \ \ \ \ \ 大\ \ \ \ \ \ 学}} }\\[0.9cm]
+    \textsc{\huge \kaishu{\textbf{计\ \ 算\ \ 机\ \ 学\ \ 院}}}\\[0.5cm]
+    \textsc{\Large \textbf{并行程序设计期末实验报告}}\\[0.8cm]
+    \HRule \\[0.9cm]
+    { \LARGE \bfseries 基于 Pthread、OpenMP 与 CRT 的\\[0.3cm] NTT 多项式乘法并行优化}\\[0.4cm]
+    \HRule \\[2.0cm]
+    \centering
+    \textsc{\LARGE \kaishu{姓名\ :\ \underline{\makebox[5em][c]{TODO}}}}\\[0.5cm]
+    \textsc{\LARGE \kaishu{学号\ :\ \underline{\makebox[8em][c]{TODO}}}}\\[0.5cm]
+    \textsc{\LARGE \kaishu{年级\ :\ \underline{\makebox[5em][c]{TODO}}}}\\[0.5cm]
+    \textsc{\LARGE \kaishu{专业\ :\ \underline{\makebox[8em][c]{计算机科学与技术}}}}\\[0.5cm]
+    \textsc{\LARGE \kaishu{指导教师\ :\ \underline{\makebox[5em][c]{TODO}}}}\\[0.5cm]
+    \vfill
+    {\Large \today}
+    \end{center}
+\end{titlepage}
+%-------------摘------要--------------
+\newpage
+\thispagestyle{empty}
+\renewcommand{\abstractname}{\kaishu \sihao \textbf{摘要}}
+    \begin{abstract}
+
+        \noindent  %顶格
+        本实验在数论变换（Number Theoretic Transform, NTT）多项式乘法的迭代实现基础上，
+        分别使用 Pthread 与 OpenMP 完成了多线程并行化，
+        并进一步针对大模数 $p=1337006139375617$ 实现了基于中国剩余定理（CRT）的进阶优化。
+        报告以 32 位标量迭代 NTT（V0）作为性能基准，按版本演进的方式讨论了 OpenMP（V1）
+        与 Pthread（V2--V6）多种任务划分策略，重点对比了按 block 划分、按 butterfly 展平划分、
+        连续 flat 划分、whole-pipeline 线程池以及 cyclic-flat 在负载均衡、同步开销
+        与访存局部性上的差异。在三组 32 位模数实验中，OpenMP 8 线程平均延迟为
+        $21.7870$\,ms，Pthread whole-pipeline 8 线程平均为 $23.2387$\,ms，OpenMP 较 Pthread
+        快约 $6.7\%$。在大模数场景下，直接基于 \texttt{\_\_int128} 的标量 NTT 耗时
+        $109.006$\,ms，OpenMP 版本降至 $45.704$\,ms，进一步采用 4 模数分组 CRT 结合
+        Montgomery NTT 与 Fast Garner 合并的版本（V10-2）在 8 线程下三次复跑平均
+        $33.6254$\,ms，相对直接大模数标量加速约 $3.24\times$。
+
+        \vspace{0.5em}
+
+        \noindent\textbf{关键字：}NTT；多项式乘法；Pthread；OpenMP；中国剩余定理；Montgomery 模乘；Garner 合并
+\end{abstract}
+%----------------------------------------------------------------
+\tableofcontents
+%----------------------------------------------------------------
+\newpage
+\watermark{60}{10}{NKU}
+\setcounter{page}{1}
+
+%================================================================
+\section{实验概述}
+%================================================================
+
+\subsection{实验目的}
+
+本次实验对应课程 Lab3 多线程编程作业，要求在已有串行算法的基础上，分别使用 POSIX Threads（Pthread）\cite{butenhof1997programming}
+和 OpenMP\cite{dagum1998openmp} 完成所选选题的并行化实现，并系统分析不同任务划分策略、线程数与同步机制对性能的影响。
+本人选择的选题为 NTT 多项式乘法优化，主要目标是：
+
+\begin{enumerate}
+  \item 基于实验框架完成迭代 NTT 的串行基线实现，作为后续并行化的参考；
+  \item 分别使用 OpenMP 与 Pthread 实现 NTT 多线程版本，比较任务划分、同步策略
+        和线程管理开销对性能的影响；
+  \item 在三组 32 位 NTT-friendly 模数上测试 $1/2/4/8$ 线程的性能，分析扩展性、
+        加速比与并行效率；
+  \item 完成进阶部分：针对大模数 $p = 1337006139375617$ 实现基于中国剩余定理\cite{knuth1997art}
+        的多模数并行优化，对比直接大模数 NTT 与 CRT 大模数 NTT 的性能；
+  \item 形成对“线程创建/销毁开销”、“后期 stage 负载不均”、“访存局部性”
+        等典型并行性能问题的工程理解。
+\end{enumerate}
+
+\subsection{选题背景}
+
+多项式乘法是密码学、信号处理与同态加密等领域的基础运算。
+在同态加密与基于 ideal lattice 的密码学方案中，模数通常较大，
+朴素 $O(n^2)$ 实现完全不可接受。学术与工程实现普遍采用 NTT
+将其转化为 $O(n \log n)$\cite{cooley1965algorithm}。
+NTT 在数论层面替代了 FFT 的复数单位根，避免了浮点误差，并便于在
+有限域 $\mathbb{Z}_p$ 上进行精确计算，被广泛应用于 ideal lattice
+密码原语的高效实现\cite{longa2016speeding,harvey2014faster}。
+
+NTT 的迭代实现由若干 stage 组成，每层 stage 内的 butterfly 运算之间相互独立，
+是天然的并行计算单元；但不同 stage 之间存在数据依赖，必须借助同步原语
+确保上一层全部完成后才能进入下一层。这种“同步等价于全局 barrier”的模式
+使其成为研究多线程任务划分、负载均衡和同步开销的良好对象，与本课程
+Lab3 中关于 Pthread 静态线程与 OpenMP 隐式 barrier 的讨论高度契合。
+
+\subsection{本文完成内容}
+
+依据 Lab3 Pthread 与 OpenMP 实验指导书以及 NTT 选题介绍的要求，本文完成的主要工作包括：
+
+\begin{itemize}
+  \item 实现 32 位 NTT 标量基线 V0，采用 bit-reversal 与 Montgomery 模乘\cite{montgomery1985modular}，
+        作为后续并行化的对照；
+  \item 使用 OpenMP 实现 stage 内 block 并行的多线程 NTT（V1），通过外层 \texttt{parallel}
+        区域、\texttt{single} 预计算单位根和 \texttt{for schedule(static)} 完成并行；
+  \item 使用 Pthread 完成五个版本的并行化：block-parallel（V2）、flat-butterfly（V3）、
+        连续 flat（V4）、whole-pipeline 线程池（V5）、whole-pipeline+cyclic-flat（V6），
+        并对各版本性能进行对比分析；
+  \item 完成 $1/2/4/8$ 线程数下 OpenMP 与 Pthread 的扩展性实验；
+  \item 实现大模数 NTT 的标量版（V7）与 OpenMP 版（V8），使用 \texttt{\_\_int128}
+        处理 60 位以内模数；
+  \item 完成 CRT 大模数进阶优化：5 模数初版（V9）、4 模数 + Montgomery（V10-1）、
+        4 模数分组 CRT + Montgomery NTT + Fast Garner（V10-2）；
+  \item 撰写实验报告，对所有版本的性能、加速比、并行效率与实现复杂度进行系统比较。
+\end{itemize}
+
+需要说明的是，按照 Lab3 实验要求，本文重点为 Pthread 与 OpenMP 多线程优化，
+NTT 选题介绍中提到的“四分 NTT”优化未在本实验中实现，SIMD/NEON 仅作为上一实验的
+背景出现，在本实验中以非 SIMD 的标量 NTT 为基线出发，集中讨论多线程并行化与 CRT
+大模数优化。
+
+%================================================================
+\section{算法原理}
+%================================================================
+
+\subsection{多项式乘法定义}
+
+给定两个多项式
+\[
+  f(x) = a_{n-1}x^{n-1} + \cdots + a_1 x + a_0,\qquad
+  g(x) = b_{m-1}x^{m-1} + \cdots + b_1 x + b_0,
+\]
+其乘积 $h(x) = f(x) g(x)$ 的 $x^k$ 项系数为
+\[
+  h_k = \sum_{i=0}^{k} a_i \, b_{k-i}.
+\]
+朴素卷积实现的时间复杂度为 $O(nm)$，对于 $n, m$ 量级达到 $10^5$ 的输入不具备实用性。
+
+\subsection{NTT 与有限域上的单位根}
+
+设 $p$ 为素数且 $L \mid (p-1)$，$g$ 为 $p$ 的一个原根，定义 $\mathbb{Z}_p$ 上的 $L$ 次单位根
+\[
+  \omega_L = g^{(p-1)/L} \bmod p.
+\]
+$\omega_L$ 具备与复数单位根相同的代数性质，因此可以将 FFT 中所有复数单位根换为 $\omega_L$，
+将所有复数运算换为模 $p$ 运算，即得到 NTT。多项式乘法的标准 NTT 流程为：
+
+\begin{enumerate}
+  \item 将 $f$、$g$ 的系数向量补零至 $L = 2^{\lceil \log_2 (n+m-1) \rceil}$；
+  \item 分别对两向量做正向 NTT，得到点值表示；
+  \item 点值逐点相乘，得到 $h$ 的点值表示；
+  \item 对结果做逆 NTT，并乘以 $L^{-1}$，得到 $h$ 的系数表示；
+  \item 截取前 $n + m - 1$ 项作为最终结果。
+\end{enumerate}
+
+\subsection{迭代 NTT 与 butterfly 分层}
+
+迭代 NTT 首先对输入做 bit-reversal 置换，随后按层（stage）执行 butterfly。
+单次正向 NTT 的伪代码如下：
+
+\begin{breakablealgorithm} 
+  \caption{迭代 NTT 主体——按 stage 执行 butterfly}
+  \begin{algorithmic}[1]
+      \Require 长度 $L = 2^k$ 的系数向量 $a$，模数 $p$，原根 $g$
+      \Ensure $a$ 的 NTT 变换结果（原地）
+      \State 对 $a$ 应用 bit-reversal 置换
+      \For{$b = 1, 2, 4, \dots, L/2$}
+          \State $B \gets 2b$
+          \State $\omega_n \gets g^{(p-1)/B} \bmod p$
+          \State 预计算 $\mathrm{stageRoots}[j] = \omega_n^j \bmod p$，$j = 0, 1, \dots, b-1$
+          \For{$k = 0, B, 2B, \dots, L - B$}
+              \For{$j = 0, 1, \dots, b - 1$}
+                  \State $u \gets a[k+j]$
+                  \State $t \gets a[k+j+b] \cdot \mathrm{stageRoots}[j] \bmod p$
+                  \State $a[k+j] \gets (u + t) \bmod p$
+                  \State $a[k+j+b] \gets (u - t) \bmod p$
+              \EndFor
+          \EndFor
+      \EndFor
+      \State \Return $a$
+  \end{algorithmic}  
+\end{breakablealgorithm}
+
+同一 stage 内每个 block 与每个 butterfly 都是独立运算，天然支持多线程；
+不同 stage 之间存在写后读依赖，必须通过 barrier 或 OpenMP 的隐式同步保证一致性。
+
+\subsection{Montgomery 模乘}
+
+对于 32 位 NTT-friendly 模数，模乘出现在每个 butterfly 中，是 NTT 的主要计算量来源。
+Montgomery 模乘\cite{montgomery1985modular} 选取参数 $R = 2^{32}$，
+通过预计算 $\mu = -p^{-1} \bmod R$，将原本的 \texttt{\%} 运算替换为乘法 + 加法 + 移位组合：
+\[
+  \mathrm{redc}(T) = \bigl(T + ((T \bmod R) \cdot \mu \bmod R) \cdot p\bigr) / R.
+\]
+这样 \texttt{ab \% p} 的代价显著低于直接取模，并且在不依赖 SIMD 的标量代码中也能取得收益。
+
+\subsection{中国剩余定理与 Garner 合并}
+
+当目标模数 $P$ 超出 32 位甚至接近 60 位时，单次模乘必须使用 \texttt{\_\_int128} 或
+更高精度类型，开销显著增加。CRT 多模数策略的核心思想是：
+
+\begin{enumerate}
+  \item 选取若干互素的 32 位 NTT-friendly 模数 $p_0, p_1, \dots, p_{k-1}$，
+        其乘积 $\prod p_i$ 必须严格大于卷积单点最大值；
+  \item 分别在每个小模数下完成系数 $\bmod\, p_i$ 的 NTT 多项式乘法；
+  \item 利用 Garner 算法\cite{knuth1997art} 将各小模数下的结果重构出 $\bmod\, P$ 的结果。
+\end{enumerate}
+
+Garner 合并的关键是预计算各对 $p_i, p_j$ 的模逆元 $\mathrm{inv}_{ij} = p_i^{-1} \bmod p_j$，
+使得合并阶段只剩下若干次乘加而非昂贵的大数除法，显著降低 CRT 合并阶段的常数。
+
+%================================================================
+\section{串行基线与数据结构}
+%================================================================
+
+\subsection{V0：32 位标量迭代 NTT 基线}
+
+V0 是本文所有并行版本的对照基准。它是非 SIMD 的纯标量实现，采用 Montgomery 表示存储
+stageRoots，避免每个 butterfly 重新进入 \texttt{\%} 运算。其关键数据结构包括：
+
+\begin{itemize}
+  \item \texttt{firstTransformed}, \texttt{secondTransformed}：两个长度 $L \le 2^{18}$
+        的静态数组，作为输入多项式补零后存放系数的 buffer；
+  \item \texttt{stageRoots[]}, \texttt{stageRootsMontgomery[]}：每个 stage 预计算的
+        单位根表，Montgomery 形式存储以便快速模乘；
+  \item \texttt{bitReverseTable[]}：bit-reversal 置换表，在每次 NTT 开始前应用。
+\end{itemize}
+
+V0 在三组 32 位输入下的延迟约 $44\sim46$\,ms，作为后续 OpenMP 与 Pthread 1 线程对照基线。
+
+\subsection{正确性验证}
+
+实验框架提供两个正确性检查函数：
+
+\begin{itemize}
+  \item \texttt{fCheck}：用于前三个 32 位模数的输入；
+  \item \texttt{fCheckLarge}：用于第四个大模数 $p = 1337006139375617$ 的输入。
+\end{itemize}
+
+本实验中所有列入正式结果的版本均通过对应检查并输出``多项式乘法结果正确''或
+``大模数多项式乘法结果正确''。测试脚本在结果输出之后向日志路径写入时偶尔
+出现权限错误，但发生在算法完成之后，不影响算法正确性，本文不展开。
+
+%================================================================
+\section{OpenMP 并行设计}
+%================================================================
+
+\subsection{设计思路}
+
+按照实验指导书的提示，OpenMP 实现采用以下设计：
+
+\begin{enumerate}
+  \item 将 \texttt{\#pragma omp parallel} 上提到 NTT 主循环之外，让线程组在
+        stage 循环中复用，避免每个 stage 都进行 fork-join 带来的额外开销；
+  \item 由 \texttt{\#pragma omp single} 执行每层 stageRoots 的预计算；
+  \item 使用 \texttt{\#pragma omp for schedule(static)} 并行处理当前 stage
+        的所有 block；
+  \item 利用 \texttt{single} 与 \texttt{for} 的隐式 barrier 保证``单位根计算完毕''
+        与``当前 stage 全部完成''两个时间点；
+  \item 同时对清零、输入拷贝、点值乘法、逆 NTT 后的缩放以及最终结果回拷
+        都使用 \texttt{\#pragma omp for} 进行并行化。
+\end{enumerate}
+
+\subsection{关键代码片段}
+
+\begin{lstlisting}[title=OpenMP NTT 主体伪代码,frame=trbl,language={C++}]
+#pragma omp parallel num_threads(threadCount)
+{
+    // 1) bit-reversal `置换并行`
+    #pragma omp for schedule(static)
+    for (int i = 0; i < L; ++i) {
+        int j = bitReverseTable[i];
+        if (j > i) std::swap(a[i], a[j]);
+    }
+
+    // 2) stage `循环`
+    for (int b = 1; b < L; b <<= 1) {
+        int B = b << 1;
+
+        // `由一个线程预计算本层单位根；隐式 barrier 保证可见性`
+        #pragma omp single
+        {
+            uint32_t w  = mont_one;
+            uint32_t wn = mont_pow(omega, (P - 1) / B);
+            for (int j = 0; j < b; ++j) {
+                stageRootsMontgomery[j] = w;
+                w = mont_mul(w, wn);
+            }
+        }
+
+        // block `级并行：每个线程负责若干个 block`
+        #pragma omp for schedule(static)
+        for (int k = 0; k < L; k += B) {
+            for (int j = 0; j < b; ++j) {
+                uint32_t u = a[k + j];
+                uint32_t t = mont_mul(a[k + j + b],
+                                      stageRootsMontgomery[j]);
+                a[k + j]     = add_mod(u, t);
+                a[k + j + b] = sub_mod(u, t);
+            }
+        }
+        // `隐式 barrier 保证下一层之前本层完成`
+    }
+}
+\end{lstlisting}
+
+\subsection{OpenMP 与 V0 三组 32 位输入对比}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{lccc}
+  \toprule  
+  \textbf{输入} & \textbf{V0 标量} (ms) & \textbf{V1 OpenMP 8 线程} (ms) & \textbf{加速比}\\
+  \midrule
+  input 1, $p = 7340033$    & 44.4277 & 22.5479 & 约 $1.97\times$ \\
+  input 2, $p = 104857601$  & 45.3791 & 23.0579 & 约 $1.97\times$ \\
+  input 3, $p = 469762049$  & 45.8223 & 23.5296 & 约 $1.95\times$ \\
+  \bottomrule
+  \end{tabular}
+  \caption{V0 标量与 V1 OpenMP 8 线程在三组 32 位输入上的对比}
+  \label{tab:v0vsomp}
+\end{table}
+
+可以看到，OpenMP 8 线程在三组输入上均能稳定取得近 $2\times$ 加速。注意这里以单线程的
+V0 标量版作为对照，已经包含了 Montgomery 模乘等标量优化，因此加速比受到串行段
+（bit-reversal、单位根预计算）的较大牵制。下一节将以 OpenMP 自身 1 线程为基准重新
+计算并行效率。
+
+\subsection{OpenMP 线程数扩展性实验}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ccccc}
+  \toprule  
+  \textbf{线程数} & $p=7340033$ & $p=104857601$ & $p=469762049$ & \textbf{三组平均}\\
+  \midrule
+  1 & 45.0691 & 45.9454 & 46.2821 & 45.7655 \\
+  2 & 30.4181 & 31.1385 & 31.3640 & 30.9735 \\
+  4 & 24.3344 & 24.4606 & 24.7056 & 24.5002 \\
+  8 & 21.3026 & 21.9200 & 22.1383 & \textbf{21.7870} \\
+  \bottomrule
+  \end{tabular}
+  \caption{OpenMP 在 1/2/4/8 线程下三组输入的运行时间（单位：ms）}
+  \label{tab:omp-scale}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ccc}
+  \toprule  
+  \textbf{线程数} & \textbf{平均加速比} & \textbf{平均并行效率}\\
+  \midrule
+  1 & $1.000\times$ & 100.0\% \\
+  2 & $1.478\times$ & 73.9\%  \\
+  4 & $1.868\times$ & 46.7\%  \\
+  8 & $2.101\times$ & 26.3\%  \\
+  \bottomrule
+  \end{tabular}
+  \caption{OpenMP 平均加速比与并行效率（以 OpenMP 1 线程为基准）}
+  \label{tab:omp-speedup}
+\end{table}
+
+OpenMP 随着线程数增加持续变快，8 线程时取得最佳平均延迟 $21.79$\,ms。
+但加速比明显低于线性增长，主要原因有：
+
+\begin{itemize}
+  \item bit-reversal 阶段虽然可以并行，但写冲突要求按 $j > i$ 判断，引入分支开销；
+  \item 每层单位根预计算由一个线程完成（\texttt{single}），是串行段；
+  \item 每层 \texttt{for} 结束的隐式 barrier 同步开销随线程数增加；
+  \item 后期 stage $b$ 变大、block 数变小，并行粒度下降；
+  \item NTT 是访存密集型计算，线程数增加后内存带宽成为瓶颈。
+\end{itemize}
+
+%================================================================
+\section{Pthread 并行设计与优化演进}
+%================================================================
+
+\subsection{V2：block-parallel}
+
+V2 是 Pthread 入门版本，思路与 OpenMP V1 类似：对每个 stage，按 block 把任务分给所有
+线程。但每次 NTT 调用结束都需要 \texttt{pthread\_create} 与 \texttt{pthread\_join}，
+开销显著。三组 32 位输入的延迟为：
+
+\begin{itemize}
+  \item $p = 7340033$: $38.3756$\,ms
+  \item $p = 104857601$: $41.2726$\,ms
+  \item $p = 469762049$: $40.4079$\,ms
+\end{itemize}
+
+主要瓶颈在于后期 stage 的 \texttt{blockCount} 急剧减少：当 $b = L/2$ 时只有 $1$ 个 block，
+实际上只有 $1$ 个线程在工作，其余 $7$ 个线程闲置等待 barrier。
+
+\subsection{V3：flat-butterfly}
+
+V3 将每层的 $L/2$ 个 butterfly 拉平为线性任务序列，按线程 id 做 cyclic 或区间划分，
+使每一层都能让所有线程均匀承担工作。三组 32 位输入：
+
+\begin{itemize}
+  \item $p = 7340033$: $35.1163$\,ms
+  \item $p = 104857601$: $35.6363$\,ms
+  \item $p = 469762049$: $36.0163$\,ms
+\end{itemize}
+
+性能从 V2 的 $38$--$41$\,ms 下降到 $35$--$36$\,ms，直接验证了后期 stage 闲置是
+V2 的主要瓶颈，这一改造正是 Lab3 实验指导书所强调的``合理任务划分''。
+
+\subsection{V4：连续 flat-butterfly}
+
+V4 在 V3 的基础上，将 cyclic 划分换为连续区间划分，试图改善 cache 局部性。结果如下：
+
+\begin{itemize}
+  \item $p = 7340033$: $36.0632$\,ms
+  \item $p = 104857601$: $38.7218$\,ms
+  \item $p = 469762049$: $35.3413$\,ms
+\end{itemize}
+
+V4 在不同输入上波动较大，与 V3 相比未取得稳定优势。原因是 NTT 中 butterfly 的访存模式
+由 stage 控制，其访存对的间隔依赖 $b$，连续划分并不一定能映射到连续的内存块上。
+
+\subsection{V5：whole-pipeline 线程池}
+
+V5 是本文最终采用的 Pthread 版本。它将整个多项式乘法流水线（清零、输入拷贝、两次正向
+NTT、点值乘法、逆 NTT、缩放、结果拷贝）都纳入同一组 Pthread 线程的工作中，
+整个流水线只创建一次线程组。
+
+线程 0 负责 bit-reversal 与每层 stageRoots 预计算，其余线程在 barrier 处等待；
+当线程 0 完成预计算后释放 barrier，所有线程并行执行该 stage 的 butterfly；
+本 stage 完成后再以 barrier 同步进入下一阶段。三组 32 位输入的延迟为：
+
+\begin{itemize}
+  \item $p = 7340033$: $25.9370$\,ms
+  \item $p = 104857601$: $26.5954$\,ms
+  \item $p = 469762049$: $26.8529$\,ms
+\end{itemize}
+
+相对 V2--V4 大幅下降，证明``线程创建与销毁开销''是基础 Pthread 实现的主要瓶颈之一，
+这也正是 Lab3 指导书中``Pthread 编程范式''一节反复强调的静态线程优势\cite{butenhof1997programming}。
+
+\subsection{V6：cyclic-flat 反例}
+
+V6 在 V5 的 whole-pipeline 框架上把 block 划分换成 cyclic flat-butterfly 划分。结果反而退化：
+
+\begin{itemize}
+  \item $p = 7340033$: $40.6159$\,ms
+  \item $p = 104857601$: $41.2744$\,ms
+  \item $p = 469762049$: $42.4182$\,ms
+\end{itemize}
+
+原因主要有：
+
+\begin{enumerate}
+  \item flat-butterfly 每个 butterfly 都需要从全局任务 id 反推 \texttt{blockIndex}
+        和 \texttt{offset}，引入整数除法与取模；
+  \item cyclic 分配破坏了同一线程访问连续 block 的局部性，每次 butterfly 都跳跃到
+        不同的 cache line；
+  \item 在 V5 的 whole-pipeline 框架下，原本 block 级并行已经能让 8 个线程在 NTT 的
+        大部分 stage 中保持忙碌，进一步细化任务划分带来的负载均衡收益小于额外开销。
+\end{enumerate}
+
+\subsection{Pthread 版本演进对比}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{lccc}
+  \toprule  
+  \textbf{版本} & $p=7340033$ & $p=104857601$ & $p=469762049$ \\
+  \midrule
+  V2 block-parallel             & 38.3756          & 41.2726          & 40.4079          \\
+  V3 flat-butterfly             & 35.1163          & 35.6363          & 36.0163          \\
+  V4 contiguous flat-butterfly  & 36.0632          & 38.7218          & 35.3413          \\
+  V5 whole-pipeline pool        & \textbf{25.9370} & \textbf{26.5954} & \textbf{26.8529} \\
+  V6 whole-pipeline cyclic-flat & 40.6159          & 41.2744          & 42.4182          \\
+  \bottomrule
+  \end{tabular}
+  \caption{Pthread 各版本三组 32 位输入运行时间对比（单位：ms）}
+  \label{tab:pthread-versions}
+\end{table}
+
+\subsection{Pthread V5 关键代码片段}
+
+\begin{lstlisting}[title=Pthread whole-pipeline 线程函数主体（简化）,frame=trbl,language={C++}]
+void* worker(void* arg) {
+    int tid = ((WorkerArg*)arg)->tid;
+
+    // `阶段 1：参与清零 / 输入拷贝`
+    do_clear_and_copy(tid);
+    pthread_barrier_wait(&stage_barrier);
+
+    // `阶段 2：正向 NTT（first）`
+    forward_ntt_pipeline(firstTransformed, tid);
+
+    // `阶段 3：正向 NTT（second）`
+    forward_ntt_pipeline(secondTransformed, tid);
+
+    // `阶段 4：点值乘法`
+    pointwise_multiply(tid);
+    pthread_barrier_wait(&stage_barrier);
+
+    // `阶段 5：逆 NTT`
+    inverse_ntt_pipeline(firstTransformed, tid);
+
+    // `阶段 6：缩放 + 结果回拷`
+    scale_and_writeback(tid);
+    pthread_barrier_wait(&stage_barrier);
+    return nullptr;
+}
+
+void forward_ntt_pipeline(uint32_t* a, int tid) {
+    // bit-reversal `由线程 0 完成`
+    if (tid == 0) apply_bit_reversal(a);
+    pthread_barrier_wait(&stage_barrier);
+
+    for (int b = 1; b < L; b <<= 1) {
+        if (tid == 0) precompute_stage_roots(b);
+        pthread_barrier_wait(&stage_barrier);
+
+        int B = b << 1;
+        // `按 block 做静态划分`
+        for (int k = tid * B; k < L; k += B * THREAD_COUNT) {
+            butterfly_block(a, k, b);
+        }
+        pthread_barrier_wait(&stage_barrier);
+    }
+}
+\end{lstlisting}
+
+\subsection{Pthread 线程数扩展性实验（基于 V5）}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ccccc}
+  \toprule  
+  \textbf{线程数} & $p=7340033$ & $p=104857601$ & $p=469762049$ & \textbf{三组平均}\\
+  \midrule
+  1 & 45.0159 & 45.7279 & 46.0507 & 45.5982 \\
+  2 & 31.1355 & 31.7720 & 33.8902 & 32.2659 \\
+  4 & 24.0226 & 25.4599 & 24.6986 & 24.7270 \\
+  8 & 22.5886 & 23.6726 & 23.4548 & \textbf{23.2387} \\
+  \bottomrule
+  \end{tabular}
+  \caption{Pthread V5 在 1/2/4/8 线程下三组输入的运行时间（单位：ms）}
+  \label{tab:pthread-scale}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ccc}
+  \toprule  
+  \textbf{线程数} & \textbf{平均加速比} & \textbf{平均并行效率}\\
+  \midrule
+  1 & $1.000\times$ & 100.0\% \\
+  2 & $1.415\times$ & 70.7\%  \\
+  4 & $1.845\times$ & 46.1\%  \\
+  8 & $1.963\times$ & 24.5\%  \\
+  \bottomrule
+  \end{tabular}
+  \caption{Pthread V5 平均加速比与并行效率（以 Pthread 1 线程为基准）}
+  \label{tab:pthread-speedup}
+\end{table}
+
+Pthread V5 在所有线程数下都比 V2/V3/V4 更快，8 线程下平均约 $23.24$\,ms，
+比单线程的 $45.6$\,ms 提升约 $2\times$。加速曲线与 OpenMP 趋势一致：
+随着线程数增加，并行效率持续下降，主要受 bit-reversal 串行、stageRoots
+串行预计算与 barrier 同步开销的影响。
+
+%================================================================
+\section{OpenMP 与 Pthread 对比}
+%================================================================
+
+\subsection{8 线程性能对比}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{lcccc}
+  \toprule  
+  \textbf{实现}   & $p=7340033$ & $p=104857601$ & $p=469762049$ & \textbf{三组平均}\\
+  \midrule
+  OpenMP 8 线程  & 21.3026 & 21.9200 & 22.1383 & \textbf{21.7870} \\
+  Pthread 8 线程 & 22.5886 & 23.6726 & 23.4548 & 23.2387 \\
+  \bottomrule
+  \end{tabular}
+  \caption{OpenMP 8 线程与 Pthread V5 8 线程三组输入对比（单位：ms）}
+  \label{tab:omp-vs-pthread}
+\end{table}
+
+OpenMP 8 线程相对 Pthread V5 8 线程整体快约 $6.7\%$。
+
+\subsection{对比分析}
+
+\begin{itemize}
+  \item \textbf{性能}：OpenMP 略优，主要得益于运行时较成熟的线程池、调度器
+        和编译器辅助优化；
+  \item \textbf{编程复杂度}：OpenMP 仅需在循环外加若干指导语句，
+        Pthread 需要手写 \texttt{pthread\_create}、\texttt{pthread\_join}、
+        \texttt{pthread\_barrier\_t}、\texttt{WorkerArg} 结构体以及阶段划分；
+  \item \textbf{线程管理}：OpenMP 内置线程池，跨 \texttt{parallel} 区域复用线程；
+        Pthread 需开发者自行实现 whole-pipeline 才能避免反复创建/销毁线程；
+  \item \textbf{同步机制}：OpenMP 使用 \texttt{for}/\texttt{single} 的隐式 barrier，
+        简单稳定；Pthread 需显式管理 barrier，粒度更灵活但也更容易引入死锁等问题；
+  \item \textbf{调度灵活性}：OpenMP 提供 \texttt{schedule(static|dynamic|guided)}
+        等简单切换；Pthread 想要等价效果需要自己实现任务队列；
+  \item \textbf{可维护性}：OpenMP 几乎不改动原算法结构，Pthread 需要对算法
+        做较深入的重构。
+\end{itemize}
+
+\textbf{结论}：在 NTT 这类``stage 间需 barrier、stage 内并行''的计算上，OpenMP 在性能、
+开发成本和可维护性上整体优于手写 Pthread，与实验指导书的预期一致。Pthread 的价值
+更多体现在需要精细化控制线程协作的场景，本实验中 whole-pipeline 线程池便是这种
+精细控制的具体体现。
+
+%================================================================
+\section{大模数与 CRT 进阶优化}
+%================================================================
+
+\subsection{大模数为何需要特殊处理}
+
+第四个测试输入使用模数 $p = 1337006139375617 \approx 2^{50}$。该模数远超 32 位上限，
+单次模乘的中间结果可能达到 $2^{100}$，必须使用 \texttt{\_\_int128} 或更高精度类型。
+\texttt{\_\_int128} 在 64 位平台上由两个寄存器组成，单次乘法和取模的开销显著高于 32 位。
+
+\subsection{V7：大模数标量 NTT}
+
+V7 是直接基于 \texttt{\_\_int128} 的标量 NTT：所有 butterfly 中的乘法和加减运算均在
+64/128 位下完成。正确性通过 \texttt{fCheckLarge}。
+
+\noindent\textbf{延迟：}\;$109.006$\,ms.
+
+\subsection{V8：大模数 OpenMP NTT}
+
+V8 直接在 V7 基础上套用 V1 的 OpenMP 并行模式，线程数为 8。
+其延迟降至 $45.704$\,ms，加速比约 $2.39\times$。
+
+\subsection{V9：5 模数 CRT 初版}
+
+V9 引入 CRT：选用 5 个 32 位 NTT-friendly 模数分别完成 NTT，随后用 Garner 合并到
+目标大模数。其优点是把昂贵的 \texttt{\_\_int128} 模乘换成多个 32 位模乘；
+缺点是模数过多导致 NTT 工作量倍增，且单纯按模数级并行时，5 个模数无法与 8 个线程对齐。
+最终延迟 $53.0959$\,ms，反而略慢于直接大模数 OpenMP。
+
+\subsection{V10-1：4 模数 + Montgomery CRT}
+
+V10-1 将 CRT 模数数量减少到 4 个，并在每个小模数 NTT 内部使用 Montgomery 表示，
+降低单次模乘代价。延迟为 $48.2172$\,ms，相比 V9 有改善，但仍接近直接大模数 OpenMP，
+未充分发挥 8 线程的潜力。
+
+\subsection{V10-2：4 模数分组 CRT + Montgomery NTT + Fast Garner}
+
+V10-2 是本文最终的进阶版本，针对 8 线程平台做了如下设计：
+
+\begin{enumerate}
+  \item \textbf{CRT\_MOD\_COUNT = 4}：使用 4 个互素 NTT-friendly 模数
+        $\{469762049,\, 754974721,\, 880803841,\, 998244353\}$ 及其原根 $\{3, 11, 26, 3\}$，
+        其乘积可以覆盖卷积单点最大值；
+  \item \textbf{Grouped OpenMP 并行}：将 8 个 OpenMP 线程分成 4 组，每组 2 个线程
+        协同处理一个 CRT 小模数；组内通过嵌套 \texttt{parallel}/外层任务分发实现，
+        组间互不干扰；
+  \item \textbf{Montgomery NTT}：每个 32 位小模数的 NTT 都使用 Montgomery reduction，
+        模乘开销降到最低；
+  \item \textbf{Fast Garner 合并}：预计算 6 个模逆元 $\mathrm{inv}_{01}, \mathrm{inv}_{02},
+        \mathrm{inv}_{12}, \mathrm{inv}_{03}, \mathrm{inv}_{13}, \mathrm{inv}_{23}$ 以及
+        合并系数 $\mathrm{coeff}_0$\,--\,$\mathrm{coeff}_3$，在合并阶段只剩若干次乘加。
+\end{enumerate}
+
+V10-2 在 8 线程下三次复跑结果：
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{cc}
+  \toprule  
+  \textbf{Run} & \textbf{延迟 (ms)}\\
+  \midrule
+  Run 1 & 34.3048 \\
+  Run 2 & 33.6297 \\
+  Run 3 & \textbf{32.9417} \\
+  \midrule
+  平均  & \textbf{33.6254} \\
+  \bottomrule
+  \end{tabular}
+  \caption{V10-2 三次独立运行的稳定性测试}
+  \label{tab:v10-stability}
+\end{table}
+
+\subsection{大模数版本汇总对比}
+
+\begin{table}[H]
+  \centering
+  \renewcommand{\arraystretch}{1.15}
+  \begin{tabular}{lp{6.5cm}c}
+  \toprule  
+  \textbf{版本} & \textbf{说明} & \textbf{时间 (ms)}\\
+  \midrule
+  V7    & 直接大模数标量 NTT，\texttt{\_\_int128}              & 109.006 \\
+  V8    & 直接大模数 OpenMP NTT，8 线程                        & 45.704  \\
+  V9    & 5 模数 CRT 初版，8 线程                              & 53.0959 \\
+  V10-1 & 4 模数 + Montgomery CRT，8 线程                      & 48.2172 \\
+  V10-2 & 4 模数分组 CRT + Montgomery + Fast Garner，
+          8 线程三次平均                                       & \textbf{33.6254} \\
+  \bottomrule
+  \end{tabular}
+  \caption{大模数版本性能对比（$p = 1337006139375617$）}
+  \label{tab:large-modulus}
+\end{table}
+
+\subsection{V10-2 为何最快}
+
+V10-2 相对其它大模数实现的优势可归纳为以下四点：
+
+\begin{enumerate}
+  \item \textbf{昂贵 128 位乘法 $\to$ 廉价 32 位乘法}：相比 V7/V8，将单次大模数乘法
+        替换为 4 个独立的 32 位 Montgomery 模乘，单次操作开销显著下降；
+  \item \textbf{模数数量适配线程数}：相比 V9 的 5 模数方案，4 模数恰好可被 8 线程整除，
+        每组 2 个线程；模数级并行与组内 stage 级并行结合，线程利用率高；
+  \item \textbf{组内细粒度并行}：每个小模数 NTT 内部仍采用 grouped OpenMP 并行，
+        避免了单纯按模数划分时``一个模数只用 1 个线程''带来的资源浪费；
+  \item \textbf{Garner 合并开销降到最低}：通过预计算 $\mathrm{inv}_{ij}$ 和合并系数，
+        将原本需要多次大数运算的合并阶段压缩到若干次乘加。
+\end{enumerate}
+
+\textbf{加速比小结}：
+
+\begin{itemize}
+  \item 相对 V7：$109.006 / 33.6254 \approx 3.24\times$
+  \item 相对 V8：$45.704 / 33.6254 \approx 1.36\times$
+  \item 相对 V9：$53.0959 / 33.6254 \approx 1.58\times$
+\end{itemize}
+
+%================================================================
+\section{性能分析与讨论}
+%================================================================
+
+\subsection{正确性总结}
+
+\begin{itemize}
+  \item 前三个 32 位输入（$p = 7340033, 104857601, 469762049$）在所有版本（V0--V6）
+        下均通过 \texttt{fCheck}；
+  \item 第四个大模数输入（$p = 1337006139375617$）在 V7、V8、V9、V10-1、V10-2 下
+        均通过 \texttt{fCheckLarge}；
+  \item 在 $1/2/4/8$ 线程下重复实验，结果均稳定通过检查。
+\end{itemize}
+
+\subsection{扩展性分析}
+
+OpenMP 与 Pthread V5 在 $1 \to 2 \to 4 \to 8$ 线程时均持续加速，但加速比从 2 线程的
+$1.4\times$ 左右下降到 8 线程的 $2\times$ 左右，即并行效率从约 $70\%$ 降到约 $25\%$。
+这一规律与 NTT 算法本身的特点高度一致：
+
+\begin{enumerate}
+  \item bit-reversal 阶段串行段占比固定，按 Amdahl 定律限制加速比；
+  \item stageRoots 预计算由一个线程完成，每层都有一段串行段；
+  \item 每个 stage 末尾的 barrier 在 8 线程下同步成本上升；
+  \item 后期 stage 中 $b$ 增大、block 数减少，可并行任务量下降；
+  \item NTT 数据规模为 $L = 2^{17}$ 时已超出 L1/L2 cache，访存成为瓶颈，
+        线程数继续增加只会加重内存带宽压力。
+\end{enumerate}
+
+\subsection{Pthread 任务划分策略对比}
+
+实验数据表明：
+
+\begin{itemize}
+  \item \textbf{V2 block-parallel} 在后期 stage 出现线程闲置；
+  \item \textbf{V3 flat-butterfly} 解决了后期闲置，相对 V2 提升约 $10\%$；
+  \item \textbf{V4 连续 flat} 因 NTT 访存模式不连续，没有进一步收益；
+  \item \textbf{V5 whole-pipeline 线程池} 通过减少 \texttt{pthread\_create}/
+        \texttt{pthread\_join} 次数，将延迟从 $35$\,ms 量级压到 $25$--$26$\,ms 量级，
+        是 Pthread 路线中最显著的一次性能跃迁；
+  \item \textbf{V6 cyclic-flat} 反而退化，表明``过度细化任务划分''并不总是好事，
+        过于细的任务划分会引入整数除法和坏的访存局部性。
+\end{itemize}
+
+\subsection{大模数 CRT 收益分析}
+
+CRT 路线对大模数 NTT 的收益主要来自算法层而非线程数堆叠。V8 与 V10-2 都使用 8 线程，
+但 V10-2 通过``Montgomery 32 位模乘 + 4 模数分组 + Fast Garner''三件组合，
+将平均延迟从 $45.7$\,ms 降到 $33.6$\,ms，再次说明在多线程已经接近平台极限时，
+\textbf{算法级优化往往比单纯提高线程数更有效}。
+
+\subsection{非线性加速的主要瓶颈}
+
+综合 OpenMP、Pthread 各版本数据，本实验中无法获得线性加速的主要原因有：
+
+\begin{itemize}
+  \item bit-reversal 阶段串行部分；
+  \item stageRoots 预计算阶段由单线程完成；
+  \item 每层 NTT 后的 barrier 同步；
+  \item 后期 stage 并行粒度变小；
+  \item NTT 数据规模超出 cache，内存带宽成为瓶颈；
+  \item CRT 路线中合并阶段虽然已优化，但仍有不可消除的常数开销。
+\end{itemize}
+
+%================================================================
+\section{AI 辅助过程说明}
+%================================================================
+
+按照课程进阶要求允许并鼓励的方式，本实验在以下环节使用了生成式 AI 辅助：
+
+\begin{itemize}
+  \item \textbf{资料解读}：辅助梳理 Pthread/OpenMP 实验指导书与 NTT 选题介绍中的
+        实验要求与评分细则；
+  \item \textbf{并行化方案讨论}：辅助讨论 NTT stage 内 butterfly 是否独立、
+        bit-reversal 是否需要串行、OpenMP \texttt{parallel}/\texttt{single}/\texttt{for}
+        组合的语义边界；
+  \item \textbf{版本演进与反思}：协助梳理从 V2 到 V6 的实验现象，包括``后期 stage 闲置''
+        ``线程创建销毁开销''``cyclic 分配破坏局部性''等问题的分析路径；
+  \item \textbf{CRT 思路细节}：辅助查阅与梳理 Garner 合并的数学推导，以及 4 模数
+        grouped CRT 与 Montgomery NTT 的实现细节；
+  \item \textbf{数据整理与报告组织}：协助整理实验数据、生成对比表格、组织报告章节顺序。
+\end{itemize}
+
+所有最终代码均经过本人理解、修改与本地编译运行；所有实验数据来源于本人在实验平台上的实测，
+正确性通过框架提供的 \texttt{fCheck} 与 \texttt{fCheckLarge} 验证。
+完整的 AI 辅助对话记录随报告附录或附件提交。
+
+%================================================================
+\section{总结与展望}
+%================================================================
+
+\subsection{主要工作与结论}
+
+本文围绕 NTT 多项式乘法选题，完成了 Pthread 与 OpenMP 的多线程实现，并进一步实现了
+基于 CRT 的大模数进阶优化。主要工作与结论可总结为：
+
+\begin{enumerate}
+  \item 完成 OpenMP NTT 实现（V1），在 32 位输入上 8 线程平均延迟 $21.7870$\,ms，
+        相对 V0 标量基线加速约 $2.10\times$；
+  \item 完成 5 个 Pthread 版本（V2--V6），其中 V5 whole-pipeline 线程池最优，
+        8 线程平均 $23.2387$\,ms；
+  \item 系统比较 OpenMP 与 Pthread 在性能、编程复杂度、同步机制、线程管理与
+        调度灵活性上的差异，在 NTT 这类 stage 化的并行计算上，OpenMP 综合优于 Pthread；
+  \item 完成大模数 NTT 的标量与 OpenMP 实现（V7、V8），分别将延迟从 $109.006$\,ms
+        降到 $45.704$\,ms；
+  \item 完成 CRT 进阶优化（V9、V10-1、V10-2），最终 V10-2 在 8 线程下三次平均
+        $33.6254$\,ms，相对 V7 加速约 $3.24\times$，相对 V8 加速约 $1.36\times$。
+\end{enumerate}
+
+\subsection{经验总结}
+
+\begin{itemize}
+  \item 任务划分要与算法各 stage 的并行粒度匹配，过粗导致负载不均，过细引入额外
+        计算与坏的局部性；
+  \item 同步策略与线程管理开销在中小规模算法上往往是主要瓶颈，whole-pipeline 线程池
+        在本实验中收益显著；
+  \item 在多线程已经接近平台极限时，\textbf{算法级优化（如 Montgomery 模乘、CRT、
+        Fast Garner）} 往往比单纯增加线程数更有效；
+  \item OpenMP 的简洁性在工程中具有较高价值，Pthread 适合需要精细化控制的场景。
+\end{itemize}
+
+\subsection{展望}
+
+\begin{itemize}
+  \item 进一步探索 bit-reversal 阶段的并行化，减小 NTT 中的串行段；
+  \item 实现全局共享的 stageRoots 预计算，使每层不再依赖``单线程预计算 + barrier''；
+  \item 探索 NTT 选题介绍中提到的四分 NTT 算法，进一步降低 stage 数；
+  \item 在不同的硬件平台（x86 / ARM Kunpeng）上重复实验，比较平台特性对策略选择的影响；
+  \item 在更大规模（$L \ge 2^{20}$）的多项式乘法上检验各方案的扩展性。
+\end{itemize}
+
+%================================================================
+\appendix
+\section{关键代码片段}
+%================================================================
+
+\subsection{Montgomery 32 位模乘核心}
+
+\begin{lstlisting}[title=Montgomery 模乘核心,frame=trbl,language={C++}]
+struct Mont32 {
+    uint32_t p;       // `模数`
+    uint32_t pinv;    // -p^{-1} mod 2^32
+    uint32_t r2;      // (2^32)^2 mod p
+    uint32_t one;     // 2^32 mod p
+};
+
+// redc(T) = (T + (T*pinv mod 2^32) * p) >> 32
+static inline uint32_t mont_redc(uint64_t T, const Mont32& m) {
+    uint32_t k = (uint32_t)T * m.pinv;
+    uint64_t t = T + (uint64_t)k * m.p;
+    uint32_t r = (uint32_t)(t >> 32);
+    return r >= m.p ? r - m.p : r;
+}
+
+static inline uint32_t mont_mul(uint32_t a, uint32_t b, const Mont32& m) {
+    return mont_redc((uint64_t)a * b, m);
+}
+\end{lstlisting}
+
+\subsection{V10-2 Grouped CRT 主体结构（节选）}
+
+\begin{lstlisting}[title=4 模数 grouped CRT 主体,frame=trbl,language={C++}]
+constexpr int CRT_MOD_COUNT = 4;
+constexpr int THREAD_COUNT  = 8;
+// `每组 2 个线程协同处理一个小模数`
+constexpr int GROUP_THREADS = THREAD_COUNT / CRT_MOD_COUNT;
+
+const uint32_t MODS[CRT_MOD_COUNT] = {
+    469762049u, 754974721u, 880803841u, 998244353u
+};
+const uint32_t ROOTS[CRT_MOD_COUNT] = { 3u, 11u, 26u, 3u };
+
+void crt_polynomial_multiply(/* ... */) {
+    // `顶层：CRT_MOD_COUNT 个任务，每个任务用 GROUP_THREADS 个线程`
+    #pragma omp parallel num_threads(CRT_MOD_COUNT)
+    {
+        int mod_id = omp_get_thread_num();
+        // `在每个小模数内部，组内 2 个线程协同做 NTT`
+        ntt_pipeline_for_modulus(mod_id, GROUP_THREADS);
+    }
+
+    // Garner `合并：使用预计算的 inv_ij 与 coeff_i`
+    fast_garner_merge(/* ... */);
+}
+\end{lstlisting}
+
+\subsection{Fast Garner 预计算}
+
+\begin{lstlisting}[title=Fast Garner 预计算,frame=trbl,language={C++}]
+struct FastGarner4 {
+    uint32_t inv01, inv02, inv12, inv03, inv13, inv23;
+    // `合并系数（在目标大模数下）`
+    uint64_t coeff0, coeff1, coeff2, coeff3;
+};
+
+void prepare_fast_garner(FastGarner4& g) {
+    g.inv01 = mod_inv(MODS[0], MODS[1]);
+    g.inv02 = mod_inv(MODS[0], MODS[2]);
+    g.inv12 = mod_inv(MODS[1], MODS[2]);
+    g.inv03 = mod_inv(MODS[0], MODS[3]);
+    g.inv13 = mod_inv(MODS[1], MODS[3]);
+    g.inv23 = mod_inv(MODS[2], MODS[3]);
+    // `合并到目标模数 P 的系数`
+    g.coeff0 = 1ULL;
+    g.coeff1 = (uint64_t)MODS[0] % P;
+    g.coeff2 = mulmod_u64(g.coeff1, MODS[1], P);
+    g.coeff3 = mulmod_u64(g.coeff2, MODS[2], P);
+}
+\end{lstlisting}
+
+%----------------------------------------------------------------
+\newpage
+\begin{thebibliography}{9}
+
+\bibitem{butenhof1997programming}
+D. R. Butenhof.
+\newblock \emph{Programming with POSIX Threads}.
+\newblock Addison-Wesley, 1997.
+
+\bibitem{dagum1998openmp}
+L. Dagum and R. Menon.
+\newblock OpenMP: An Industry-Standard API for Shared-Memory Programming.
+\newblock \emph{IEEE Computational Science and Engineering}, 1998.
+
+\bibitem{knuth1997art}
+D. E. Knuth.
+\newblock \emph{The Art of Computer Programming, Volume 2: Seminumerical Algorithms}.
+\newblock Addison-Wesley, 1997.
+
+\bibitem{cooley1965algorithm}
+J. W. Cooley and J. W. Tukey.
+\newblock An Algorithm for the Machine Calculation of Complex Fourier Series.
+\newblock \emph{Mathematics of Computation}, 1965.
+
+\bibitem{montgomery1985modular}
+P. L. Montgomery.
+\newblock Modular Multiplication Without Trial Division.
+\newblock \emph{Mathematics of Computation}, 1985.
+
+\bibitem{longa2016speeding}
+P. Longa and M. Naehrig.
+\newblock Speeding up the Number Theoretic Transform for Faster Ideal Lattice-Based Cryptography.
+\newblock Cryptology ePrint Archive, 2016.
+
+\bibitem{harvey2014faster}
+D. Harvey.
+\newblock Faster Arithmetic for Number-Theoretic Transforms.
+\newblock Journal of Symbolic Computation, 2014.
+
+\end{thebibliography}
+\end{document}
+
