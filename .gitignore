@@ -19,6 +19,9 @@ main_*
 *.e
 *.log
 
+# Local notes and personal experiment logs.
+MPI/logs/
+
 # Profiling artifacts.
 perf.data
 perf.data.old
