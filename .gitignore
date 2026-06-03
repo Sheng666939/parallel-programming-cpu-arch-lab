@@ -1,5 +1,35 @@
 bin/
+
+# Curated result summaries may be committed under MPI/results/.
 results/
+!MPI/results/
+!MPI/results/**
+
+# C/C++ and MPI build artifacts.
 *.o
+*.obj
+*.exe
+main
+main_*
+!main_*.*
+!**/main_*.*
+
+# Scheduler/runtime temporary output.
+*.out
+*.e
+*.log
+
+# Profiling artifacts.
 perf.data
+perf.data.old
 pref.data.old
+
+# System and IDE files.
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Misc local temporary files.
+*.tmp
+*.bak
