@@ -9,7 +9,8 @@
 - `before_main.cc`：MPI 改造前后保留下来的早期版本。
 - `main_mpi_step1.cc`、`main_mpi_step1(1).cc`、`main_mpi_step2.cc`：MPI CRT 并行逐步修改过程中的阶段版本。
 - `main.cc`：稳定版本，支持 input 0~3 的 task-level MPI 开关，以及 input 4 的 reduce-sum / point-to-point 收集方式切换。
-- `main_v3_hybrid.cc`：目前主要版本。在 input 4 上保留 MPI CRT 的 rank 间划分，同时给每个 rank 内部的单个 CRT 小模数 NTT 增加 OpenMP 线程并行。
+- `main_v3_hybrid.cc`：完整保留版。在 input 4 上保留 MPI CRT 的 rank 间划分，同时给每个 rank 内部的单个 CRT 小模数 NTT 增加 OpenMP 线程并行。
+- `main_v3_hybrid_final.cc`：精简后的最终版。它保留最终实验会用到的所有宏开关和检查流程，删去了不再被 `main()` 调用的旧本地 CRT 包装函数，便于阅读和提交。
 - `scripts/qsub_mpi_ntt_template.sh`：qsub 运行模板，实际提交作业时可以按线程数和进程数调整。
 - `results/experiment_summary.md`：整理后的关键实验结果。
 
@@ -74,19 +75,19 @@ point-to-point 方式避免了发送大量全 0 residue，input 4 上表现更�
 point-to-point 单线程版本：
 
 ```bash
-mpic++ main_v3_hybrid.cc -O2 -fopenmp -pthread -DTHREAD_COUNT=1 -DORDINARY_MPI_TASK=0 -DCRT_COLLECT_METHOD=1 -DCRT_INTRA_THREAD=0 -o main_v3_ptp_t1
+mpic++ main_v3_hybrid_final.cc -O2 -fopenmp -pthread -DTHREAD_COUNT=1 -DORDINARY_MPI_TASK=0 -DCRT_COLLECT_METHOD=1 -DCRT_INTRA_THREAD=0 -o main_v3_ptp_t1
 ```
 
 hybrid 2 线程版本：
 
 ```bash
-mpic++ main_v3_hybrid.cc -O2 -fopenmp -pthread -DTHREAD_COUNT=2 -DORDINARY_MPI_TASK=0 -DCRT_COLLECT_METHOD=1 -DCRT_INTRA_THREAD=1 -o main_v3_hybrid_t2
+mpic++ main_v3_hybrid_final.cc -O2 -fopenmp -pthread -DTHREAD_COUNT=2 -DORDINARY_MPI_TASK=0 -DCRT_COLLECT_METHOD=1 -DCRT_INTRA_THREAD=1 -o main_v3_hybrid_t2
 ```
 
 hybrid 4 线程版本：
 
 ```bash
-mpic++ main_v3_hybrid.cc -O2 -fopenmp -pthread -DTHREAD_COUNT=4 -DORDINARY_MPI_TASK=0 -DCRT_COLLECT_METHOD=1 -DCRT_INTRA_THREAD=1 -o main_v3_hybrid_t4
+mpic++ main_v3_hybrid_final.cc -O2 -fopenmp -pthread -DTHREAD_COUNT=4 -DORDINARY_MPI_TASK=0 -DCRT_COLLECT_METHOD=1 -DCRT_INTRA_THREAD=1 -o main_v3_hybrid_t4
 ```
 
 如果需要回到旧的稳定 MPI CRT 版本，也可以直接编译 `main.cc`：
@@ -122,7 +123,7 @@ CRT_INTRA_THREAD = 1
 input 4 latency = 46.5961 ms
 ```
 
-对应的是 `main_v3_hybrid.cc` 中的 MPI CRT + point-to-point + rank 内 2 线程版本。
+对应的是 `main_v3_hybrid_final.cc` 中的 MPI CRT + point-to-point + rank 内 2 线程版本。
 
 ## 运行注意
 

@@ -10,7 +10,7 @@
 | task-level MPI | `ORDINARY_MPI_TASK=1` | input 0~3 中 rank 0 forward A，rank 1 forward B，rank 0 完成 pointwise 和 inverse。 |
 | MPI CRT reduce-sum | `CRT_COLLECT_METHOD=0` | input 4 的 4 个 CRT 小模数按 rank 分配，使用 `MPI_Reduce + MPI_SUM` 收集 residue。 |
 | MPI CRT point-to-point | `CRT_COLLECT_METHOD=1` | input 4 中每个 rank 只发送自己负责的小模数 residue，rank 0 使用 `MPI_Send / MPI_Recv` 收集。 |
-| Version 3 hybrid | `CRT_COLLECT_METHOD=1`, `CRT_INTRA_THREAD=1` | input 4 使用 MPI CRT + point-to-point + rank 内 OpenMP threaded CRT NTT。 |
+| Version 3 hybrid | `CRT_COLLECT_METHOD=1`, `CRT_INTRA_THREAD=1` | input 4 使用 MPI CRT + point-to-point + rank 内 OpenMP threaded CRT NTT。最终提交版本为 `main_v3_hybrid_final.cc`。 |
 
 ## Best Known Result
 
