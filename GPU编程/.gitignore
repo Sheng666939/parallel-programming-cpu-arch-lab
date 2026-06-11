@@ -1,0 +1,12 @@
+build/
+bin/
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.log
+*.tmp
+.vscode/
+.DS_Store

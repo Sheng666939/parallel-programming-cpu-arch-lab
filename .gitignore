@@ -4,6 +4,8 @@ bin/
 results/
 !MPI/results/
 !MPI/results/**
+!GPU编程/results/
+!GPU编程/results/**
 
 # C/C++ and MPI build artifacts.
 *.o
