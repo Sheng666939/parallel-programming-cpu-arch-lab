@@ -1,5 +1,7 @@
 # GPU NTT 多项式乘法实验记录草稿
 
+本实验环境中 CUDA runtime version 为 11070，即 CUDA 11.7；CUDA driver version 为 12060，即 CUDA 12.6。
+
 ## 1. NTT 并行化思路
 
 NTT 的每一层 stage 由若干个互不重叠的 butterfly 组成。在同一 stage 内，不同 butterfly 访问的系数位置互不冲突，因此可以让每个 CUDA thread 负责一个 butterfly。

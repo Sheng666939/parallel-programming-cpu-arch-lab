@@ -4,11 +4,12 @@
 
 - CPU/GPU 平台：Windows 本地笔记本环境。
 - GPU：NVIDIA GeForce RTX 4060 Laptop GPU。
-- CUDA runtime version：11070。
-- CUDA driver version：12060。
+- CUDA runtime version：11070，即 CUDA 11.7。
+- CUDA driver version：12060，即 CUDA 12.6。
 - Compute capability：8.9。
 - CUDA block size：256。
 - 编译器：本机 `nvcc` 为 CUDA 11.7；由于 CUDA 11.7 不支持 `sm_89`，`build.bat` 自动回退到通用 CUDA 编译命令。
+- 编译目标说明：本机 nvcc 为 CUDA 11.7，无法直接使用 RTX 4060 对应的 sm_89 编译目标，因此 build.bat 自动回退到通用 CUDA 编译命令；本实验结果可以反映当前本地环境下的真实性能，但后续若升级 CUDA 11.8/12.x 并使用 sm_89 重新编译，可能进一步改善性能。
 - 性能模式状态：benchmark 前后 `nvidia-smi` 均显示 GPU 处于 P0，显存空闲，结果记录在 `results/gpu_status_before.txt` 和 `results/gpu_status_after.txt`。
 - 正式 benchmark 命令：`bin\gpu_ntt.exe --min-log 10 --max-log 22 --repeat 20 --warmup 5`。
 
@@ -52,11 +53,11 @@ bin\gpu_ntt.exe --verify-only
 
 小规模下 GPU end-to-end 时间受 kernel launch、内存分配和拷贝影响明显，因此相对 CPU 不一定加速。从 `2^14` 开始，GPU 版本开始体现并行优势；到 `2^22` 时，Montgomery 版本达到约 23.21 倍 end-to-end 加速。
 
-## 5. Barrett 相对 naive 的提升比例
+## 5. Barrett 相对 naive 的 kernel 加速比
 
-这里使用 kernel-only 时间计算 `naive_kernel / barrett_kernel`，大于 1 表示 Barrett kernel 更快。
+这里使用 kernel-only 时间计算 `naive_kernel / Barrett_kernel`。加速比大于 1 表示 Barrett kernel 比 naive kernel 更快；加速比小于 1 表示 Barrett kernel 比 naive kernel 更慢。
 
-| transform_n | Barrett / naive |
+| transform_n | naive_kernel / Barrett_kernel |
 | ---: | ---: |
 | 1024 | 0.961131 |
 | 4096 | 1.039946 |
@@ -68,11 +69,11 @@ bin\gpu_ntt.exe --verify-only
 
 Barrett 在中小规模部分测试略优于 naive，但在较大规模中未稳定领先。原因可能是当前 kernel 中 twiddle 仍在线程内计算，整体开销不仅由一次模乘约简决定；同时不同 reduction 路径的寄存器压力和指令调度也会影响最终 kernel 时间。
 
-## 6. Montgomery 相对 naive 的提升比例
+## 6. Montgomery 相对 naive 的 kernel 加速比
 
-这里使用 kernel-only 时间计算 `naive_kernel / montgomery_kernel`，大于 1 表示 Montgomery kernel 更快。
+这里使用 kernel-only 时间计算 `naive_kernel / Montgomery_kernel`。加速比大于 1 表示 Montgomery kernel 比 naive kernel 更快；加速比小于 1 表示 Montgomery kernel 比 naive kernel 更慢。
 
-| transform_n | Montgomery / naive |
+| transform_n | naive_kernel / Montgomery_kernel |
 | ---: | ---: |
 | 1024 | 0.695965 |
 | 4096 | 1.111208 |
@@ -86,7 +87,7 @@ Montgomery 在大规模下表现更好，尤其 `2^20` 和 `2^22`，说明当 bu
 
 ## 7. kernel-only 与 end-to-end 差异分析
 
-kernel-only 只统计 GPU 计算 kernel，end-to-end 还包含显存分配、H2D/D2H 拷贝、同步和释放。小规模时，kernel 时间本身很短，固定开销占比高，因此 GPU end-to-end 时间可能慢于 CPU。随着规模增大，butterfly 数量快速增加，kernel 并行吞吐成为主导，GPU 相对 CPU 的加速比明显提升。
+kernel-only 只统计 GPU 计算 kernel，end-to-end 总时间不仅包含 H2D、kernel、D2H，还包含 cudaMalloc/cudaFree、同步、事件记录和函数调度等开销。当前实现每次卷积都会申请和释放显存，因此端到端时间是一个偏保守的测量口径；如果在实际应用中复用 device buffer，total time 还有进一步下降空间。小规模时，kernel 时间本身很短，固定开销占比高，因此 GPU end-to-end 时间可能慢于 CPU。随着规模增大，butterfly 数量快速增加，kernel 并行吞吐成为主导，GPU 相对 CPU 的加速比明显提升。
 
 以 `transform_n = 2^22` 为例，naive 的 kernel-only mean 为 12.228250 ms，而 end-to-end mean 为 28.393265 ms；Montgomery 的 kernel-only mean 为 9.217294 ms，而 end-to-end mean 为 24.196315 ms。可以看到数据传输、分配和同步仍是端到端性能的重要组成部分。
 

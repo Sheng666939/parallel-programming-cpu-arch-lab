@@ -6,6 +6,8 @@
 
 - 操作系统：Windows
 - GPU：本地 NVIDIA RTX 4060
+- CUDA runtime version：11070，即 CUDA 11.7
+- CUDA driver version：12060，即 CUDA 12.6
 - 编译工具：CUDA Toolkit、MSVC、`nvcc`
 - 建议终端：`x64 Native Tools Command Prompt for VS`，或已经配置好 MSVC 环境变量的 PowerShell
 
@@ -16,6 +18,8 @@ powershell -ExecutionPolicy Bypass -File scripts/check_env.ps1
 ```
 
 如果 `nvcc` 不存在，需要先安装 CUDA Toolkit，并确认终端中能找到 MSVC 编译器。CUDA 11.7 等较旧版本可能不支持 `sm_89`，`build.bat` 会先尝试 `sm_89`，失败后自动使用通用 CUDA 编译命令。
+
+本机 nvcc 为 CUDA 11.7，无法直接使用 RTX 4060 对应的 sm_89 编译目标，因此 build.bat 自动回退到通用 CUDA 编译命令；本实验结果可以反映当前本地环境下的真实性能，但后续若升级 CUDA 11.8/12.x 并使用 sm_89 重新编译，可能进一步改善性能。
 
 ## 编译方式
 
